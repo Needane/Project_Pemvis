@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package tampilan;
-
 import java.sql.*;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -13,9 +12,7 @@ import koneksi.koneksi;
 public class kasir extends javax.swing.JFrame {
 private Connection conn = new koneksi().connect();
 private DefaultTableModel tabmode;
-    /**
-     * Creates new form kasir
-     */
+   
     public kasir() {
         initComponents();
         kosong();
