@@ -1,8 +1,14 @@
-
 package tampilan;
-
+import java.sql.*;
+import java.util.HashMap;
+import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
+import koneksi.koneksi;
 public class menu extends javax.swing.JFrame {
-
+private Connection conn = new koneksi().connect();
+    
     public menu() {
         initComponents();
     }
@@ -16,11 +22,14 @@ public class menu extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem6 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jMenu1.setText("master");
+        jMenu1.setText("Master");
 
         jMenuItem1.setText("kasir");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -46,15 +55,31 @@ public class menu extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem3);
 
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Transaksi");
+
         jMenuItem4.setText("nota");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem4);
+        jMenu2.add(jMenuItem4);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Laporan");
+
+        jMenuItem6.setText("Laporan Pelanggan");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem6);
+
+        jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
 
@@ -97,6 +122,17 @@ public class menu extends javax.swing.JFrame {
         mn.setLocationRelativeTo(null);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        try {
+                String path="./src/Laporan/Pelanggan.jasper"; // letak penyimpanan report
+                HashMap parameter = new HashMap();
+                JasperPrint print = JasperFillManager.fillReport(path, parameter, conn);
+                JasperViewer.viewReport(print, false);
+            } catch (Exception ex) {
+                JOptionPane. showMessageDialog(rootPane, "Dokumen Tidak Ada "+ex);
+                }
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
     
     /**
      * @param args the command line arguments
@@ -137,10 +173,13 @@ public class menu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem6;
     // End of variables declaration//GEN-END:variables
 }

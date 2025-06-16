@@ -9,6 +9,10 @@ import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JSpinner;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
+import java.util.HashMap;
 import koneksi.koneksi;
 
 /**
@@ -26,11 +30,12 @@ private DefaultTableModel tabmode;
      */
     public nota() {
         initComponents();
-        String KD = user.getUserLogin();
-        jLabel16.setText(KD);
+        String kd = user.getUserLogin();
+        jLabel16.setText(kd);
         kosong();
         aktif();
         autonumber();
+        nama();
     
 }
 
@@ -123,6 +128,19 @@ total += amount;
 totalharga.setText(Integer.toString(total));
 }
 }
+
+public void cetak() {
+    try{
+        String path="./src/Laporan/Nota.jasper";
+        HashMap parameter = new HashMap () ;
+        parameter.put ("id_nota", txtidnota.getText () ) ;
+        JasperPrint print = JasperFillManager. fillReport (path, parameter, conn) ;
+        JasperViewer. viewReport (print, false) ;
+       } catch (Exception ex) {
+            JOptionPane. showMessageDialog(rootPane, "Dokumen Tidak Ada" +ex);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -133,8 +151,8 @@ totalharga.setText(Integer.toString(total));
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jtgl = new javax.swing.JSpinner();
@@ -172,14 +190,16 @@ totalharga.setText(Integer.toString(total));
         totalharga = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         txtidnota = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Nota");
 
-        jLabel16.setText("ID Kasir");
+        jLabel25.setText("ID Kasir");
 
-        jLabel17.setText("Nama Kasir");
+        jLabel14.setText("Nama Kasir");
 
         jLabel2.setText("ID Nota");
 
@@ -413,6 +433,10 @@ totalharga.setText(Integer.toString(total));
 
         jLabel13.setText("Total Harga");
 
+        jLabel16.setText("jLabel16");
+
+        jLabel17.setText("jLabel15");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -430,8 +454,10 @@ totalharga.setText(Integer.toString(total));
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel1)
                                     .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel25)
+                                        .addGap(18, 18, 18)
                                         .addComponent(jLabel16)
-                                        .addGap(312, 312, 312))
+                                        .addGap(246, 246, 246))
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                         .addComponent(jLabel2)
                                         .addGap(18, 18, 18)
@@ -440,11 +466,14 @@ totalharga.setText(Integer.toString(total));
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel17)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel14))
                                 .addGap(18, 18, 18)
-                                .addComponent(jtgl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jtgl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel17))))
                         .addGap(50, 50, 50))))
             .addGroup(layout.createSequentialGroup()
                 .addGap(52, 52, 52)
@@ -466,6 +495,8 @@ totalharga.setText(Integer.toString(total));
                 .addComponent(jLabel1)
                 .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel25)
+                    .addComponent(jLabel14)
                     .addComponent(jLabel16)
                     .addComponent(jLabel17))
                 .addGap(18, 18, 18)
@@ -551,7 +582,9 @@ totalharga.setText(Integer.toString(total));
             stat.setString(2, fd);
             stat.setString(3, txtid.getText());
             stat.setString(4, jLabel16.getText());
+            
             stat.executeUpdate();
+            
             int t = tbltransaksi.getRowCount();
             for(int i=0; i<t ; i++)
             {
@@ -559,15 +592,18 @@ totalharga.setText(Integer.toString(total));
                 String xhb = tbltransaksi.getValueAt(i, 2).toString();
                 String xhj = tbltransaksi.getValueAt(i, 3).toString();
                 String xqty = tbltransaksi.getValueAt(i, 4).toString();
+                
                 PreparedStatement stat2 = conn.prepareStatement(zsql);
                 stat2.setString(1, txtidnota.getText());
                 stat2.setString(2, xkd);
                 stat2.setString(3, xhb);
                 stat2.setString(4, xhj);
                 stat2.setString(5, xqty);
+                
                 stat2.executeUpdate();
             }
             JOptionPane.showMessageDialog(null, "data berhasil disimpan");
+            cetak();
         }
          catch (SQLException e){
          JOptionPane.showMessageDialog(null, "data gagal disimpan"+e);
@@ -642,9 +678,11 @@ totalharga.setText(Integer.toString(total));
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
